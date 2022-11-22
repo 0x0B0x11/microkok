@@ -1,3 +1,4 @@
+
 def sub_cb(topic, msg):
   print((topic, msg))
   if topic == b'notification' and msg == b'received':
@@ -5,7 +6,7 @@ def sub_cb(topic, msg):
 
 def connect_and_subscribe():
   global client_id, mqtt_server, topic_sub
-  client = MQTTClient(client_id, mqtt_server)
+  client = MQTTClient(client_id, mqtt_server, port=1883)
   client.set_callback(sub_cb)
   client.connect()
   client.subscribe(topic_sub)
@@ -28,7 +29,9 @@ if __name__ == '__main__':
       try:
         client.check_msg()
         if (time.time() - last_message) > message_interval:
-          msg = b'Hello #%d' % counter
+          print(adc.read())
+          #msg = b'Hello #%d' % counter
+          msg = str(adc.read())
           client.publish(topic_pub, msg)
           last_message = time.time()
           counter += 1
